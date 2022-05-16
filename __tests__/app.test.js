@@ -13,7 +13,7 @@ describe("GET /api/topics", () => {
       .expect(200)
       .then((result) => {
         let { body } = result;
-        expect(Array.isArray(body)).toBe(true);
+        expect(Array.isArray(body.topics)).toBe(true);
       });
   });
   it("should return an array of objects with the correct keys", () => {
@@ -22,7 +22,9 @@ describe("GET /api/topics", () => {
       .expect(200)
       .then((result) => {
         let { body } = result;
-        body.forEach((topic) => {
+
+        expect(body.topics).toHaveLength(3);
+        body.topics.forEach((topic) => {
           expect(topic).toEqual(
             expect.objectContaining({
               slug: expect.any(String),
