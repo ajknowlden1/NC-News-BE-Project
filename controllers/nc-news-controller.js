@@ -8,12 +8,12 @@ const getTopics = (req, res, next) => {
 };
 
 const getArticles = (req, res, next) => {
-  if (req.params.hasOwnProperty("article_id")) {
-    const id = req.params.article_id;
-    selectArticleById(id).then((result) => {
-      res.status(200).send({ article: result });
-    });
-  }
+  const id = req.params.article_id;
+  selectArticleById(id).then((result, err) => {
+    if (result === undefined) {
+      next();
+    } else res.status(200).send({ article: result });
+  });
 };
 
 module.exports = { getTopics, getArticles };

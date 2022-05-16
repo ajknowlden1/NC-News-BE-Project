@@ -5,7 +5,7 @@ const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
 
 beforeEach(() => seed(testData));
-
+afterAll(() => connection.end());
 describe("GET /api/topics", () => {
   it("should return an array", () => {
     return request(app)
@@ -64,5 +64,7 @@ describe("GET /api/articles/:article_id", () => {
         );
       });
   });
+  it("should return with a 404 - not found error if an invalid id is given", () => {
+    return request(app).get("/api/articles/0").expect(404);
+  });
 });
-afterAll(() => connection.end());

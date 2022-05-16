@@ -9,10 +9,9 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticles);
 
 app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(400).send("bad request!");
+  if ((err = "400")) res.status(400).send("bad request!");
 });
 
-app.listen(5000, console.log("server listening on port 5000..."));
+// app.listen(5000, console.log("server listening on port 5000..."));
 
 module.exports = app;
