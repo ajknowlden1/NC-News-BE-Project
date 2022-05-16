@@ -1,4 +1,4 @@
-const selectTopics = require("../models/nc-news-model");
+const { selectTopics, selectArticleById } = require("../models/nc-news-model");
 
 const getTopics = (req, res, next) => {
   selectTopics().then((result, err) => {
@@ -7,4 +7,13 @@ const getTopics = (req, res, next) => {
   });
 };
 
-module.exports = getTopics;
+const getArticles = (req, res, next) => {
+  if (req.params.hasOwnProperty("article_id")) {
+    const id = req.params.article_id;
+    selectArticleById(id).then((result) => {
+      res.status(200).send({ article: result });
+    });
+  }
+};
+
+module.exports = { getTopics, getArticles };
