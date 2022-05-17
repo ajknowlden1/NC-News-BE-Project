@@ -5,7 +5,7 @@ const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
 
 beforeEach(() => seed(testData));
-
+afterAll(() => connection.end());
 describe("GET /api/topics", () => {
   it("should return an array", () => {
     return request(app)
@@ -34,5 +34,37 @@ describe("GET /api/topics", () => {
         });
       });
   });
-  afterAll(() => connection.end());
+});
+
+describe("GET /api/articles/:article_id", () => {
+  it("should return an object", () => {
+    return request(app)
+      .get("/api/articles/2")
+      .expect(200)
+      .then((response) => {
+        expect(typeof response).toBe("object");
+      });
+  });
+  it("should return an object with the correct properties", () => {
+    return request(app)
+      .get("/api/articles/2")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
+      });
+  });
+  it("should return with a 404 - not found error if an invalid id is given", () => {
+    return request(app).get("/api/articles/0").expect(404);
+  });
 });
