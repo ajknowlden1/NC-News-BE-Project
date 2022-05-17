@@ -95,4 +95,14 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(response instanceof Object);
       });
   });
+  it("should return an updated article object with the votes value updated correctly", () => {
+    return request(app)
+      .patch("/api/articles/2")
+      .send({ inc_vote: 5 })
+      .expect(201)
+      .then((response) => {
+        const updatedVotes = response.body.updated_article.votes;
+        expect(updatedVotes).toBe(5);
+      });
+  });
 });
