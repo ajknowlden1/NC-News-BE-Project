@@ -80,7 +80,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/some_id")
       .then((response) => {
         expect(response.body.status).toBe(400);
-        expect(response.body.msg).toBe("bad request - invalid input type");
+        expect(response.body.msg).toBe("bad request - invalid id");
       });
   });
 });
@@ -132,7 +132,16 @@ describe("PATCH /api/articles/:article_id", () => {
       .send({ inc_vote: 5 })
       .then((response) => {
         expect(response.body.status).toBe(400);
-        expect(response.body.msg).toBe("bad request - invalid input type");
+        expect(response.body.msg).toBe("bad request - invalid id");
+      });
+  });
+  it("should respond with a 400 - bad request error if the request body is invalid", () => {
+    return request(app)
+      .patch("/api/articles/2")
+      .send({ inc_votes: "five" })
+      .then((response) => {
+        expect(response.body.status).toBe(400);
+        expect(response.body.msg).toBe("bad request - invalid request body");
       });
   });
 });
