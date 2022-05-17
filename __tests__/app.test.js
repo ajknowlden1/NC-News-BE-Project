@@ -102,7 +102,17 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(201)
       .then((response) => {
         const updatedVotes = response.body.updated_article.votes;
+        console.log(updatedVotes);
         expect(updatedVotes).toBe(5);
+      });
+  });
+  it("should respond with a 404 - not found error if the id has no data associated with it", () => {
+    return request(app)
+      .patch("/api/articles/5293472")
+      .send({ inc_vote: 5 })
+      .then((response) => {
+        expect(response.body.status).toBe(404);
+        expect(response.body.msg).toBe("not found");
       });
   });
 });

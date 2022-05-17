@@ -15,9 +15,11 @@ const getArticles = (req, res, next) => {
   } else if (req.method === "PATCH") {
     const increment = req.body.inc_vote;
 
-    updateArticleVotes(id, increment).then((result, err) => {
-      res.status(201).send({ updated_article: result });
-    });
+    updateArticleVotes(id, increment)
+      .then((result, err) => {
+        res.status(201).send({ updated_article: result });
+      })
+      .catch((err) => next(err));
   }
 };
 
