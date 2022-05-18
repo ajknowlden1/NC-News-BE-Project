@@ -67,7 +67,9 @@ describe("GET /api/articles/:article_id", () => {
         );
       });
   });
-  it("should return with a 404 - not found error if an invalid id is given", () => {
+
+  it("should return with a 404 - not found error if an id has no data associated with it", () => {
+
     return request(app)
       .get("/api/articles/0")
       .then((response) => {
@@ -80,10 +82,11 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/some_id")
       .then((response) => {
         expect(response.body.status).toBe(400);
-        expect(response.body.msg).toBe("bad request - invalid input type");
+        expect(response.body.msg).toBe("bad request - invalid id");
       });
   });
 });
+
 
 describe("GET /api/users", () => {
   it("should return an array", () => {
@@ -105,6 +108,66 @@ describe("GET /api/users", () => {
         users.forEach((user) => {
           expect(user.hasOwnProperty("username")).toBe(true);
         });
+
+
+describe("PATCH /api/articles/:article_id", () => {
+  it("should return an article object", () => {
+    return request(app)
+      .patch("/api/articles/2")
+      .send({ inc_vote: 1 })
+      .expect(201)
+      .then((response) => {
+        expect(response instanceof Object);
+      });
+  });
+  it("should return an updated article object with the votes value updated correctly if the provided inc_vote is positive", () => {
+    return request(app)
+      .patch("/api/articles/2")
+      .send({ inc_vote: 5 })
+      .expect(201)
+      .then((response) => {
+        const updatedVotes = response.body.updated_article.votes;
+
+        expect(updatedVotes).toBe(5);
+      });
+  });
+  it("should return an updated article object with the votes value updated correctly if the provided inc_vote is negative", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_vote: -20 })
+      .expect(201)
+      .then((response) => {
+        const updatedVotes = response.body.updated_article.votes;
+
+        expect(updatedVotes).toBe(80);
+      });
+  });
+  it("should respond with a 404 - not found error if the id has no data associated with it", () => {
+    return request(app)
+      .patch("/api/articles/5293472")
+      .send({ inc_vote: 5 })
+      .then((response) => {
+        expect(response.body.status).toBe(404);
+        expect(response.body.msg).toBe("not found");
+      });
+  });
+  it("should respond with a 400 - bad request error if the id is invalid", () => {
+    return request(app)
+      .patch("/api/articles/an_id")
+      .send({ inc_vote: 5 })
+      .then((response) => {
+        expect(response.body.status).toBe(400);
+        expect(response.body.msg).toBe("bad request - invalid id");
+      });
+  });
+  it("should respond with a 400 - bad request error if the request body is invalid", () => {
+    return request(app)
+      .patch("/api/articles/2")
+      .send({ inc_votes: "five" })
+      .then((response) => {
+        expect(response.body.status).toBe(400);
+        expect(response.body.msg).toBe("bad request - invalid request body");
+
       });
   });
 });

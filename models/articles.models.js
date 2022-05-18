@@ -12,4 +12,18 @@ const selectArticleById = (id) => {
     });
 };
 
-module.exports = { selectArticleById };
+const updateArticleVotes = (id, increment) => {
+  return db
+    .query(
+      `UPDATE articles SET votes = votes + $2 WHERE article_id = $1 RETURNING *`,
+      [id, increment]
+    )
+    .then((result) => {
+      if (!result.rows.length) {
+        return Promise.reject({ status: 404, msg: "not found" });
+      }
+      return result.rows[0];
+    });
+};
+
+module.exports = { selectArticleById, updateArticleVotes };
