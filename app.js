@@ -1,19 +1,16 @@
 const express = require("express");
 
-const req = require("express/lib/request");
 const app = express();
 const { getArticles } = require("./controllers/articles.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
 
 const { getUsers } = require("./controllers/users.controllers");
 
-
 app.use(express.json());
 
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", getArticles);
-
 
 app.get("/api/users", getUsers);
 
@@ -37,7 +34,9 @@ app.use((err, req, res, next) => {
     res
       .status(400)
       .send({ status: 400, msg: "bad request - invalid request body" });
-  } else res.status(500).send({ status: 500, msg: "internal server error" });
+  } else {
+    res.status(500).send({ status: 500, msg: "internal server error" });
+  }
 });
 
 module.exports = app;

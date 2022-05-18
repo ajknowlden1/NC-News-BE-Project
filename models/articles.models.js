@@ -1,22 +1,21 @@
-const { rows } = require("pg/lib/defaults");
+const res = require("express/lib/response");
 const db = require("../db/connection");
 
 const selectArticleById = (id) => {
   return db
-    .query(`SELECT * FROM articles WHERE article_id = $1`, [id])
+    .query(
+      `SELECT articles.*, COUNT(comments.article_id = $1) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY  articles.article_id`,
+      [id]
+    )
     .then((result) => {
-      const article = result.rows[0];
-      return db
-        .query(`SELECT * FROM comments WHERE article_id = $1`, [id])
-        .then((response) => {
-          let comments = response.rows.length;
-          if (!result.rows.length) {
-            return Promise.reject({ status: 404, msg: "not found" });
-          } else {
-            article.comment_count = comments;
-            return article;
-          }
-        });
+      let allArticles = result.rows;
+
+      if (allArticles.length === 0)
+        return Promise.reject({ status: 404, msg: "not found" });
+      else {
+      }
+
+      return allArticles;
     });
 };
 
