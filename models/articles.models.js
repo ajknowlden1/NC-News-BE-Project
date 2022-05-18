@@ -5,10 +5,18 @@ const selectArticleById = (id) => {
   return db
     .query(`SELECT * FROM articles WHERE article_id = $1`, [id])
     .then((result) => {
-      if (!result.rows.length) {
-        return Promise.reject({ status: 404, msg: "not found" });
-      }
-      return result.rows;
+      const article = result.rows[0];
+      return db
+        .query(`SELECT * FROM comments WHERE article_id = $1`, [id])
+        .then((response) => {
+          let comments = response.rows.length;
+          if (!result.rows.length) {
+            return Promise.reject({ status: 404, msg: "not found" });
+          } else {
+            article.comment_count = comments;
+            return article;
+          }
+        });
     });
 };
 
