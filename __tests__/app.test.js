@@ -91,7 +91,8 @@ describe("GET /api/users", () => {
       .get("/api/users")
       .expect(200)
       .then((response) => {
-        expect(Array.isArray(response.body)).toBe(true);
+        const { users } = response.body;
+        expect(Array.isArray(users)).toBe(true);
       });
   });
   it("should return an array of user objects with the correct keys", () => {
@@ -99,9 +100,9 @@ describe("GET /api/users", () => {
       .get("/api/users")
       .expect(200)
       .then((response) => {
-        const userArr = response.body;
-        expect(userArr.length).not.toBe(0);
-        userArr.forEach((user) => {
+        const { users } = response.body;
+        expect(users.length).not.toBe(0);
+        users.forEach((user) => {
           expect(user.hasOwnProperty("username")).toBe(true);
         });
       });
