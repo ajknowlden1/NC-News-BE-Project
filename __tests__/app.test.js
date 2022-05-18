@@ -94,4 +94,16 @@ describe("GET /api/users", () => {
         expect(Array.isArray(response.body)).toBe(true);
       });
   });
+  it("should return an array of user objects with the correct keys", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const userArr = response.body;
+        expect(userArr.length).not.toBe(0);
+        userArr.forEach((user) => {
+          expect(user.hasOwnProperty("username")).toBe(true);
+        });
+      });
+  });
 });
