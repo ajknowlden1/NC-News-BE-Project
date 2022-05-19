@@ -73,7 +73,7 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then((response) => {
         const { body } = response;
-        expect(Number.parseInt(body.article.comment_count)).toBe(2);
+        expect(body.article.comment_count).toBe(2);
       });
   });
 
@@ -173,7 +173,9 @@ describe("GET /api/users", () => {
         const { users } = response.body;
         expect(users.length).not.toBe(0);
         users.forEach((user) => {
-          expect(user.hasOwnProperty("username")).toBe(true);
+          expect(user).toEqual(
+            expect.objectContaining({ username: expect.any(String) })
+          );
         });
       });
   });

@@ -4,7 +4,9 @@ const {
   selectAllArticles,
 } = require("../models/articles.models");
 
+
 const getArticle = (req, res, next) => {
+
   const id = req.params.article_id;
 
   if (req.method === "GET") {
