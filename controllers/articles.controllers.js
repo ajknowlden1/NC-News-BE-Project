@@ -4,7 +4,7 @@ const {
 } = require("../models/articles.models");
 
 const getArticles = (req, res, next) => {
-  const id = Number.parseInt(req.params.article_id);
+  const id = req.params.article_id;
 
   if (req.method === "GET") {
     selectArticleById(id)
