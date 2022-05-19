@@ -53,8 +53,7 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then((response) => {
         const { body } = response;
-
-        expect(body.article[0]).toEqual(
+        expect(body.article).toEqual(
           expect.objectContaining({
             article_id: 2,
             title: "Sony Vaio; or, The Laptop",
@@ -67,9 +66,17 @@ describe("GET /api/articles/:article_id", () => {
         );
       });
   });
+  it("should return an article object with the correct comment count", () => {
+    return request(app)
+      .get("/api/articles/3")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(Number.parseInt(body.article.comment_count)).toBe(2);
+      });
+  });
 
   it("should return with a 404 - not found error if an id has no data associated with it", () => {
-
     return request(app)
       .get("/api/articles/0")
       .then((response) => {
@@ -86,29 +93,6 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
-
-
-describe("GET /api/users", () => {
-  it("should return an array", () => {
-    return request(app)
-      .get("/api/users")
-      .expect(200)
-      .then((response) => {
-        const { users } = response.body;
-        expect(Array.isArray(users)).toBe(true);
-      });
-  });
-  it("should return an array of user objects with the correct keys", () => {
-    return request(app)
-      .get("/api/users")
-      .expect(200)
-      .then((response) => {
-        const { users } = response.body;
-        expect(users.length).not.toBe(0);
-        users.forEach((user) => {
-          expect(user.hasOwnProperty("username")).toBe(true);
-        });
-
 
 describe("PATCH /api/articles/:article_id", () => {
   it("should return an article object", () => {
@@ -167,7 +151,29 @@ describe("PATCH /api/articles/:article_id", () => {
       .then((response) => {
         expect(response.body.status).toBe(400);
         expect(response.body.msg).toBe("bad request - invalid request body");
-
+      });
+  });
+});
+describe("GET /api/users", () => {
+  it("should return an array", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const { users } = response.body;
+        expect(Array.isArray(users)).toBe(true);
+      });
+  });
+  it("should return an array of user objects with the correct keys", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const { users } = response.body;
+        expect(users.length).not.toBe(0);
+        users.forEach((user) => {
+          expect(user.hasOwnProperty("username")).toBe(true);
+        });
       });
   });
 });
