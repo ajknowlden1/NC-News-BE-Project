@@ -201,4 +201,16 @@ describe("GET /api/articles", () => {
         });
       });
   });
+  it("should return the articles with the comment_count key", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(body.articles.length).not.toBe(0);
+        body.articles.forEach((article) => {
+          expect(article.hasOwnProperty("comment_count")).toBe(true);
+        });
+      });
+  });
 });
