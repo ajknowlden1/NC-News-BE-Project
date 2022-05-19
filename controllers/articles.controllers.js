@@ -4,16 +4,24 @@ const {
 } = require("../models/articles.models");
 
 const getArticles = (req, res, next) => {
-  const id = Number.parseInt(req.params.article_id);
+  const id = req.params.article_id;
 
   if (req.method === "GET") {
-    selectArticleById(id)
-      .then((result, err) => {
-        const resArt = result.find((article) => article.article_id == id);
-        if (!resArt) res.status(404).send({ status: 404, msg: "not found" });
-        else res.status(200).send({ article: resArt });
-      })
-      .catch((err) => next(err));
+    if (id) {
+      selectArticleById(id)
+        .then((result, err) => {
+          const resArt = result.find((article) => article.article_id == id);
+          if (!resArt) res.status(404).send({ status: 404, msg: "not found" });
+          else res.status(200).send({ article: resArt });
+        })
+        .catch((err) => next(err));
+    } else {
+      selectArticleById()
+        .then((result, err) => {
+          res.status(200).send({ articles: result });
+        })
+        .catch((err) => next(err));
+    }
   }
 
   if (req.method === "PATCH") {

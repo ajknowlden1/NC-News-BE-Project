@@ -177,3 +177,16 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe("GET /api/articles", () => {
+  it("should return an array", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        console.log(body);
+        expect(Array.isArray(body.articles)).toBe(true);
+      });
+  });
+});
