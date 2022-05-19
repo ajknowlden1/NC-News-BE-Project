@@ -237,3 +237,15 @@ describe("GET /api/articles", () => {
       });
   });
 });
+
+describe("GET /api/articles/:article_id/comments", () => {
+  it("should return an array", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(Array.isArray(body.comments)).toBe(true);
+      });
+  });
+});
