@@ -3,6 +3,7 @@ const connection = require("../db/connection");
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
+require("jest-sorted");
 
 beforeEach(() => seed(testData));
 
@@ -174,6 +175,63 @@ describe("GET /api/users", () => {
         users.forEach((user) => {
           expect(user).toEqual(
             expect.objectContaining({ username: expect.any(String) })
+          );
+        });
+      });
+  });
+});
+
+describe("GET /api/articles", () => {
+  it("should return an array", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(Array.isArray(body.articles)).toBe(true);
+      });
+  });
+  it("should return the articles sorted in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(body.articles).toBeSorted({
+          key: "created_at",
+          descending: true,
+        });
+      });
+  });
+  it("should return the articles with the comment_count key", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(body.articles.length).not.toBe(0);
+        body.articles.forEach((article) => {
+          expect(article.hasOwnProperty("comment_count")).toBe(true);
+        });
+      });
+  });
+  it("should return the articles with the correct keys and values", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        body.articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
           );
         });
       });
