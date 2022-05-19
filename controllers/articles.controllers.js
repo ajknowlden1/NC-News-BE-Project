@@ -1,6 +1,7 @@
 const {
   selectArticleById,
   updateArticleVotes,
+  selectAllArticles,
 } = require("../models/articles.models");
 
 const getArticles = (req, res, next) => {
@@ -16,7 +17,7 @@ const getArticles = (req, res, next) => {
         })
         .catch((err) => next(err));
     } else {
-      selectArticleById()
+      selectAllArticles()
         .then((result, err) => {
           res.status(200).send({ articles: result });
         })

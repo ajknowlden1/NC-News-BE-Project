@@ -3,6 +3,7 @@ const connection = require("../db/connection");
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
+require("jest-sorted");
 
 beforeEach(() => seed(testData));
 
@@ -185,8 +186,19 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then((response) => {
         const { body } = response;
-        console.log(body);
         expect(Array.isArray(body.articles)).toBe(true);
+      });
+  });
+  it("should return the articles sorted in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(body.articles).toBeSorted({
+          key: "created_at",
+          descending: true,
+        });
       });
   });
 });
