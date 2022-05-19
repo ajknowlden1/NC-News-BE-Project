@@ -6,25 +6,24 @@ const {
 
 const getArticle = (req, res, next) => {
   const id = req.params.article_id;
+  selectArticleById(id)
+    .then((result, err) => {
+      const resArt = result.find((article) => article.article_id == id);
+      if (!resArt) res.status(404).send({ status: 404, msg: "not found" });
+      else res.status(200).send({ article: resArt });
+    })
+    .catch((err) => next(err));
+};
 
-  if (req.method === "GET") {
-    selectArticleById(id)
-      .then((result, err) => {
-        const resArt = result.find((article) => article.article_id == id);
-        if (!resArt) res.status(404).send({ status: 404, msg: "not found" });
-        else res.status(200).send({ article: resArt });
-      })
-      .catch((err) => next(err));
-  }
-  if (req.method === "PATCH") {
-    const increment = req.body.inc_vote;
+const patchArticle = (req, res, next) => {
+  const increment = req.body.inc_vote;
+  const id = req.params.article_id;
 
-    updateArticleVotes(id, increment)
-      .then((result, err) => {
-        res.status(201).send({ updated_article: result });
-      })
-      .catch((err) => next(err));
-  }
+  updateArticleVotes(id, increment)
+    .then((result, err) => {
+      res.status(201).send({ updated_article: result });
+    })
+    .catch((err) => next(err));
 };
 
 const getAllArticles = (req, res, next) => {
@@ -34,4 +33,4 @@ const getAllArticles = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
-module.exports = { getArticle, getAllArticles };
+module.exports = { getArticle, patchArticle, getAllArticles };

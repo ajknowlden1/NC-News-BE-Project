@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const {
   getArticle,
+  patchArticle,
   getAllArticles,
 } = require("./controllers/articles.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
@@ -19,7 +20,7 @@ app.get("/api/articles/:article_id", getArticle);
 
 app.get("/api/users", getUsers);
 
-app.patch("/api/articles/:article_id", getArticle);
+app.patch("/api/articles/:article_id", patchArticle);
 
 app.use((err, req, res, next) => {
   // console.log(err);
