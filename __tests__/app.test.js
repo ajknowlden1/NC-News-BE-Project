@@ -267,4 +267,23 @@ describe("GET /api/articles/:article_id/comments", () => {
         });
       });
   });
+  it("should return a 400 - bad request error if the id provided is invalid", () => {
+    return request(app)
+      .get("/api/articles/two/comments")
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe("bad request - invalid id");
+      });
+  });
+  it("should retun a 404 - not found error if the provided id has no data associated with it", () => {
+    return request(app)
+      .get("/api/articles/451234/comments")
+      .then((response) => {
+        const { body } = response;
+        console.log(body);
+        expect(body.status).toBe(404);
+        expect(body.msg).toBe("not found");
+      });
+  });
 });

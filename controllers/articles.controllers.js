@@ -39,6 +39,8 @@ const getArticleComments = (req, res, next) => {
   const id = req.params.article_id;
   selectArticleComments(id)
     .then((result, err) => {
+      if (!result.length)
+        res.status(404).send({ status: 404, msg: "not found" });
       res.status(200).send({ comments: result });
     })
     .catch((err) => next(err));
