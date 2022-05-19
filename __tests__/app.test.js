@@ -248,4 +248,23 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(Array.isArray(body.comments)).toBe(true);
       });
   });
+  it("should return an array of comment objects with the correct keys", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        body.comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              body: expect.any(String),
+              author: expect.any(String),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+            })
+          );
+        });
+      });
+  });
 });
