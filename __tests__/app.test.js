@@ -324,10 +324,32 @@ describe("POST /api/articles/:article_id/comments", () => {
   it("should respond with 400 - bad request if the id provided is invalid", () => {
     return request(app)
       .post("/api/articles/five/comments")
+      .send({ username: "lurker", body: "Simply riveting stuff!" })
       .then((response) => {
         const { body } = response;
         expect(body.status).toBe(400);
         expect(body.msg).toBe("bad request - invalid id");
+      });
+  });
+  it("should respond with 400 - bad request if the body provided is invalid", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({ user: "lurker", comment: "WOW WOW WOW " })
+      .then((response) => {
+        const { body } = response;
+        console.log(body);
+        expect(response.body.status).toBe(400);
+        expect(response.body.msg).toBe("bad request - invalid request body");
+      });
+  });
+  it("should respond with 404 - not found if the provided user does not exist in the database", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({ username: "ilovesql", body: "i print, therefore i am?" })
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(404);
+        expect(body.msg).toBe("not found");
       });
   });
 });
