@@ -321,4 +321,13 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("not found");
       });
   });
+  it("should respond with 400 - bad request if the id provided is invalid", () => {
+    return request(app)
+      .post("/api/articles/five/comments")
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe("bad request - invalid id");
+      });
+  });
 });
