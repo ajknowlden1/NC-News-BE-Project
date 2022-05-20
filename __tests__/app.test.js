@@ -352,4 +352,22 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("not found");
       });
   });
+  it("should respond with 200 - OK and ignore any additional key/value pairs if they are present", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({
+        username: "lurker",
+        body: "Simply riveting stuff!",
+        unnecessaryKey: "i'm pointless!",
+      })
+      .then((response) => {
+        const { body } = response;
+        expect(body.unnecessaryKey).toBe(undefined);
+        expect(body).toEqual(
+          expect.objectContaining({
+            comment_posted: expect.any(String),
+          })
+        );
+      });
+  });
 });
