@@ -1,3 +1,5 @@
+const { commentData, articleData } = require("../db/data/test-data");
+const { checkIDExists } = require("../db/helpers/utils");
 const {
   selectArticleById,
   updateArticleVotes,
@@ -37,11 +39,12 @@ const getAllArticles = (req, res, next) => {
 
 const getArticleComments = (req, res, next) => {
   const id = req.params.article_id;
+
   selectArticleComments(id)
-    .then((result, err) => {
-      if (!result.length)
-        res.status(404).send({ status: 404, msg: "not found" });
-      res.status(200).send({ comments: result });
+    .then((result) => {
+      if (!result.length) {
+        res.status(200).send({ comments: [] });
+      } else res.status(200).send({ comments: result });
     })
     .catch((err) => next(err));
 };

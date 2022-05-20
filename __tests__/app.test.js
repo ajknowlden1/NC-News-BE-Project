@@ -132,8 +132,8 @@ describe("PATCH /api/articles/:article_id", () => {
       .patch("/api/articles/5293472")
       .send({ inc_vote: 5 })
       .then((response) => {
-        expect(response.body.status).toBe(404);
-        expect(response.body.msg).toBe("not found");
+        expect(response.res.statusCode).toBe(404);
+        expect(response.res.statusMessage).toBe("Not Found");
       });
   });
   it("should respond with a 400 - bad request error if the id is invalid", () => {
@@ -254,6 +254,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(200)
       .then((response) => {
         const { body } = response;
+        expect(Array.isArray(body.comments)).toBe(true);
         body.comments.forEach((comment) => {
           expect(comment).toEqual(
             expect.objectContaining({
@@ -276,14 +277,13 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("bad request - invalid id");
       });
   });
-  it("should retun a 404 - not found error if the provided id has no data associated with it", () => {
+  it("should return 200 - no comments found - if the provided id is valid but has no comments associated with it", () => {
     return request(app)
-      .get("/api/articles/451234/comments")
+      .get("/api/articles/2/comments")
       .then((response) => {
         const { body } = response;
-        console.log(body);
-        expect(body.status).toBe(404);
-        expect(body.msg).toBe("not found");
+        expect(response.statusCode).toBe(200);
+        expect(body.comments).toEqual([]);
       });
   });
 });

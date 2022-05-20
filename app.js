@@ -26,13 +26,6 @@ app.get("/api/users", getUsers);
 app.patch("/api/articles/:article_id", patchArticle);
 
 app.use((err, req, res, next) => {
-  // console.log(err);
-  if (err.status === 404) {
-    res.status(404).send(err);
-  } else next(err);
-});
-
-app.use((err, req, res, next) => {
   if (err.code === "22P02") {
     res.status(400).send({ status: 400, msg: "bad request - invalid id" });
   } else next(err);
@@ -43,9 +36,12 @@ app.use((err, req, res, next) => {
     res
       .status(400)
       .send({ status: 400, msg: "bad request - invalid request body" });
-  } else {
-    res.status(500).send({ status: 500, msg: "internal server error" });
-  }
+  } else next(err);
+});
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(404).send(err);
 });
 
 module.exports = app;

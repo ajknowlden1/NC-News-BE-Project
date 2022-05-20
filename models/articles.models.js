@@ -1,5 +1,6 @@
 const res = require("express/lib/response");
 const db = require("../db/connection");
+const { commentData, articleData } = require("../db/data/test-data");
 
 const selectArticleById = (id) => {
   return db
@@ -47,7 +48,7 @@ const selectAllArticles = () => {
 const selectArticleComments = (id) => {
   return db
     .query(
-      `SELECT comment_id, body, author, votes, created_at FROM comments WHERE article_id = $1`,
+      `SELECT comment_id, body, author, votes, created_at FROM comments WHERE EXISTS (SELECT * FROM comments WHERE article_id = $1)`,
       [id]
     )
     .then((result) => {
