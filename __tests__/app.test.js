@@ -298,3 +298,17 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  it("should return an object containing the posted comment", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({ username: "lurker", body: "Simply riveting stuff!" })
+      .expect(201)
+      .then((response) => {
+        const { body } = response;
+        expect(body instanceof Object).toBe(true);
+        expect(body.comment_posted).toEqual("Simply riveting stuff!");
+      });
+  });
+});
