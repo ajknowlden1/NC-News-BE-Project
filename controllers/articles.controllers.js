@@ -5,6 +5,7 @@ const {
   updateArticleVotes,
   selectAllArticles,
   selectArticleComments,
+  insertComment,
 } = require("../models/articles.models");
 
 const getArticle = (req, res, next) => {
@@ -48,9 +49,20 @@ const getArticleComments = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
+
+const postNewComment = (req, res, next) => {
+  const id = req.params.article_id;
+  const { username, body } = req.body;
+  insertComment(id, username, body)
+    .then((response) => {
+      res.status(201).send({ comment_posted: body });
+    })
+    .catch((err) => next(err));
+};
 module.exports = {
   getArticle,
   patchArticle,
   getAllArticles,
   getArticleComments,
+  postNewComment,
 };

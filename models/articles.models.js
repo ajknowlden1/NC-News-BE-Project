@@ -62,9 +62,22 @@ const selectArticleComments = (id) => {
           });
     });
 };
+
+const insertComment = (id, username, body) => {
+  return db
+    .query(
+      `INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3 ) RETURNING *`,
+      [body, username, id]
+    )
+    .then((result) => {
+      return result.rows;
+    });
+};
+
 module.exports = {
   selectArticleById,
   updateArticleVotes,
   selectAllArticles,
   selectArticleComments,
+  insertComment,
 };

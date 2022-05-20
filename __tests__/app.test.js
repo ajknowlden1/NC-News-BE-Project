@@ -298,3 +298,76 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  it("should return an object containing the posted comment", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({ username: "lurker", body: "Simply riveting stuff!" })
+      .expect(201)
+      .then((response) => {
+        const { body } = response;
+        expect(body instanceof Object).toBe(true);
+        expect(body.comment_posted).toEqual("Simply riveting stuff!");
+      });
+  });
+  it("should respond with 404 - not found if the provided article id does not exist", () => {
+    return request(app)
+      .post("/api/articles/342/comments")
+      .send({ username: "lurker", body: "Simply riveting stuff!" })
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(404);
+        expect(body.msg).toBe("not found");
+      });
+  });
+  it("should respond with 400 - bad request if the id provided is invalid", () => {
+    return request(app)
+      .post("/api/articles/five/comments")
+      .send({ username: "lurker", body: "Simply riveting stuff!" })
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe("bad request - invalid id");
+      });
+  });
+  it("should respond with 400 - bad request if the body provided is invalid", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({ user: "lurker", comment: "WOW WOW WOW " })
+      .then((response) => {
+        const { body } = response;
+        console.log(body);
+        expect(response.body.status).toBe(400);
+        expect(response.body.msg).toBe("bad request - invalid request body");
+      });
+  });
+  it("should respond with 404 - not found if the provided user does not exist in the database", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({ username: "ilovesql", body: "i print, therefore i am?" })
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(404);
+        expect(body.msg).toBe("not found");
+      });
+  });
+  it("should respond with 200 - OK and ignore any additional key/value pairs if they are present", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({
+        username: "lurker",
+        body: "Simply riveting stuff!",
+        unnecessaryKey: "i'm pointless!",
+      })
+      .then((response) => {
+        const { body } = response;
+        expect(body.unnecessaryKey).toBe(undefined);
+        expect(body).toEqual(
+          expect.objectContaining({
+            comment_posted: expect.any(String),
+          })
+        );
+      });
+  });
+});

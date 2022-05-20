@@ -6,6 +6,7 @@ const {
   patchArticle,
   getAllArticles,
   getArticleComments,
+  postNewComment,
 } = require("./controllers/articles.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
 
@@ -25,6 +26,8 @@ app.get("/api/users", getUsers);
 
 app.patch("/api/articles/:article_id", patchArticle);
 
+app.post("/api/articles/:article_id/comments", postNewComment);
+
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {
     res.status(400).send({ status: 400, msg: "bad request - invalid id" });
@@ -36,6 +39,12 @@ app.use((err, req, res, next) => {
     res
       .status(400)
       .send({ status: 400, msg: "bad request - invalid request body" });
+  } else next(err);
+});
+
+app.use((err, req, res, next) => {
+  if (err.code === "23503") {
+    res.status(404).send({ status: 404, msg: "not found" });
   } else next(err);
 });
 
