@@ -255,6 +255,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .then((response) => {
         const { body } = response;
         expect(Array.isArray(body.comments)).toBe(true);
+        expect(body.comments.length).not.toBe(0);
         body.comments.forEach((comment) => {
           expect(comment).toEqual(
             expect.objectContaining({
