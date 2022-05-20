@@ -311,4 +311,14 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.comment_posted).toEqual("Simply riveting stuff!");
       });
   });
+  it("should respond with 404 - not found if the provided article id does not exist", () => {
+    return request(app)
+      .post("/api/articles/342/comments")
+      .send({ username: "lurker", body: "Simply riveting stuff!" })
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(404);
+        expect(body.msg).toBe("not found");
+      });
+  });
 });
