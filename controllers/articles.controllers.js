@@ -1,12 +1,13 @@
+const { commentData, articleData } = require("../db/data/test-data");
+const { checkIDExists } = require("../db/helpers/utils");
 const {
   selectArticleById,
   updateArticleVotes,
   selectAllArticles,
+  selectArticleComments,
 } = require("../models/articles.models");
 
-
 const getArticle = (req, res, next) => {
-
   const id = req.params.article_id;
   selectArticleById(id)
     .then((result, err) => {
@@ -35,4 +36,21 @@ const getAllArticles = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
-module.exports = { getArticle, patchArticle, getAllArticles };
+
+const getArticleComments = (req, res, next) => {
+  const id = req.params.article_id;
+
+  selectArticleComments(id)
+    .then((result) => {
+      if (!result.length) {
+        res.status(200).send({ comments: [] });
+      } else res.status(200).send({ comments: result });
+    })
+    .catch((err) => next(err));
+};
+module.exports = {
+  getArticle,
+  patchArticle,
+  getAllArticles,
+  getArticleComments,
+};

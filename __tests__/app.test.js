@@ -132,8 +132,8 @@ describe("PATCH /api/articles/:article_id", () => {
       .patch("/api/articles/5293472")
       .send({ inc_vote: 5 })
       .then((response) => {
-        expect(response.body.status).toBe(404);
-        expect(response.body.msg).toBe("not found");
+        expect(response.res.statusCode).toBe(404);
+        expect(response.res.statusMessage).toBe("Not Found");
       });
   });
   it("should respond with a 400 - bad request error if the id is invalid", () => {
@@ -234,6 +234,67 @@ describe("GET /api/articles", () => {
             })
           );
         });
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  it("should return an array", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(Array.isArray(body.comments)).toBe(true);
+      });
+  });
+  it("should return an array of comment objects with the correct keys", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(Array.isArray(body.comments)).toBe(true);
+        expect(body.comments.length).not.toBe(0);
+        body.comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              body: expect.any(String),
+              author: expect.any(String),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+            })
+          );
+        });
+      });
+  });
+  it("should return a 400 - bad request error if the id provided is invalid", () => {
+    return request(app)
+      .get("/api/articles/two/comments")
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe("bad request - invalid id");
+      });
+  });
+  it("should return 200 - no comments found - if the provided id is valid but has no comments associated with it", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .then((response) => {
+        const { body } = response;
+        expect(response.statusCode).toBe(200);
+        expect(body.comments).toEqual([]);
+        expect(body.comments.length).toBe(0);
+      });
+  });
+  it("should return a 404 - not found error if the provided id does not exist in the database", () => {
+    return request(app)
+      .get("/api/articles/87/comments")
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(404);
+        expect(body.msg).toBe("not found");
       });
   });
 });
