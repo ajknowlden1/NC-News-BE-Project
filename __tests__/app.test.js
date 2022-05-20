@@ -284,6 +284,16 @@ describe("GET /api/articles/:article_id/comments", () => {
         const { body } = response;
         expect(response.statusCode).toBe(200);
         expect(body.comments).toEqual([]);
+        expect(body.comments.length).toBe(0);
+      });
+  });
+  it("should return a 404 - not found error if the provided id does not exist in the database", () => {
+    return request(app)
+      .get("/api/articles/87/comments")
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(404);
+        expect(body.msg).toBe("not found");
       });
   });
 });

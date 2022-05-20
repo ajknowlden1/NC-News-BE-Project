@@ -47,12 +47,19 @@ const selectAllArticles = () => {
 
 const selectArticleComments = (id) => {
   return db
-    .query(
-      `SELECT comment_id, body, author, votes, created_at FROM comments WHERE EXISTS (SELECT * FROM comments WHERE article_id = $1)`,
-      [id]
-    )
+    .query(`SELECT * from articles WHERE article_id = $1`, [id])
     .then((result) => {
-      return result.rows;
+      if (!result.rows.length)
+        return Promise.reject({ status: 404, msg: "not found" });
+      else
+        return db
+          .query(
+            `SELECT comment_id, body, author, votes, created_at FROM comments WHERE EXISTS (SELECT * FROM comments WHERE article_id = $1)`,
+            [id]
+          )
+          .then((result) => {
+            return result.rows;
+          });
     });
 };
 module.exports = {
