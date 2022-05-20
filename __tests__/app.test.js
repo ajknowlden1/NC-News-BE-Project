@@ -375,7 +375,8 @@ describe("POST /api/articles/:article_id/comments", () => {
 describe("GET /api/articles queries", () => {
   it("should return an array of articles sorted by the provided column in descending order if the query does not specify", () => {
     return request(app)
-      .get("/api/articles/?sort_by=votes")
+      .get("/api/articles?sort_by=votes")
+
       .expect(200)
       .then((response) => {
         const { body } = response;
@@ -385,25 +386,12 @@ describe("GET /api/articles queries", () => {
   });
   it("should return the articles in ascending order if specfied by the query", () => {
     return request(app)
-      .get("/api/articles/?sort_by=comment_count&&order=asc")
+      .get("/api/articles/?sort_by=votes&&order=asc")
       .expect(200)
       .then((response) => {
         const { body } = response;
         expect(body.articles instanceof Array).toBe(true);
-        expect(body.articles).toBeSorted({
-          key: "comment_count",
-          descending: false,
-        });
-      });
-  });
-  it("should return a 400 - bad sort request error if the sort_by parameter is invalid", () => {
-    return request(app)
-      .get("/api/articles/?sort_by=age&&order=asc")
-      .then((response) => {
-        const { body } = response;
-        console.log(body);
-        expect(body.status).toBe(400);
-        expect(body.msg).toBe("bad sort request");
+        expect(body.articles).toBeSorted({ key: "votes", descending: false });
       });
   });
 });
