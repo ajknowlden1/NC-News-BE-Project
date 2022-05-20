@@ -376,10 +376,21 @@ describe("GET /api/articles queries", () => {
   it("should return an array of articles sorted by the provided column", () => {
     return request(app)
       .get("/api/articles?sort_by=votes")
+      .expect(200)
       .then((response) => {
         const { body } = response;
         expect(body.articles instanceof Array).toBe(true);
         expect(body.articles).toBeSorted({ key: "votes", descending: true });
+      });
+  });
+  it("should return the articles in ascending order if specfied by the query", () => {
+    return request(app)
+      .get("/api/articles/?sort_by=votes&&order=asc")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(body.articles instanceof Array).toBe(true);
+        expect(body.articles).toBeSorted({ key: "votes", descending: false });
       });
   });
 });
