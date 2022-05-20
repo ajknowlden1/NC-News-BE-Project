@@ -371,3 +371,15 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("GET /api/articles queries", () => {
+  it("should return an array of articles sorted by the provided column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .then((response) => {
+        const { body } = response;
+        expect(body.articles instanceof Array).toBe(true);
+        expect(body.articles).toBeSorted({ key: "votes", descending: true });
+      });
+  });
+});

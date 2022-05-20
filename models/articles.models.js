@@ -35,14 +35,32 @@ const updateArticleVotes = (id, increment) => {
     });
 };
 
-const selectAllArticles = () => {
+const selectAllArticles = (query) => {
+  const validQueries = ["votes", "comment_count", "created_at", "asc", "desc"];
+  const queryValues = [];
+  if (query.sort_by) {
+    queryValues.push(query.sort_by);
+  } else {
+    queryValues.push("created_at");
+  }
+  if (query.order) {
+    queryValues.push(query.order);
+  } else queryValues.push("desc");
+
+  console.log(queryValues, validQueries);
+  queryValues.forEach((query) => {
+    if (!validQueries.includes(query))
+      return Promise.reject({ status: "400", msg: "bad query request" });
+  });
+  const [sort_by, order] = queryValues;
+  const queryStr = `SELECT articles.*, CAST (((COUNT(comments.article_id)))AS INT) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY articles.article_id ORDER BY ${sort_by} ${order}`;
+  console.log(queryStr);
   return db
-    .query(
-      `SELECT articles.*, CAST (((COUNT(comments.article_id)))AS INT) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY articles.article_id ORDER BY created_at DESC `
-    )
+    .query(queryStr)
     .then((result) => {
       return result.rows;
-    });
+    })
+    .catch((err) => next(err));
 };
 
 const selectArticleComments = (id) => {
