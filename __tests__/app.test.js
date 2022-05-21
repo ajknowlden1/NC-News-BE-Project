@@ -3,6 +3,7 @@ const connection = require("../db/connection");
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
+const { contentDisposition } = require("express/lib/utils");
 require("jest-sorted");
 
 beforeEach(() => seed(testData));
@@ -502,6 +503,19 @@ describe("DELETE /api/comments/:comment_id", () => {
         const { body } = response;
         expect(body.status).toBe(400);
         expect(body.msg).toBe("bad request - invalid id");
+      });
+  });
+});
+
+describe("GET /api", () => {
+  it("should return a list of all available endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(body.endpoints instanceof Object).toBe(true);
+        expect(body.endpoints.length).not.toBe(0);
       });
   });
 });

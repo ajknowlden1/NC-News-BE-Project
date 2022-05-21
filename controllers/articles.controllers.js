@@ -1,5 +1,3 @@
-const { commentData, articleData } = require("../db/data/test-data");
-const { checkIDExists } = require("../db/helpers/utils");
 const {
   selectArticleById,
   updateArticleVotes,
