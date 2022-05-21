@@ -394,13 +394,26 @@ describe("GET /api/articles queries", () => {
         expect(body.articles).toBeSorted({ key: "votes", descending: false });
       });
   });
-  it("should return an array of articles with the topic specified in the query", () => {
+  it("should return a 400 - bad order request error if the order query is invalid", () => {
     return request(app)
-      .get("/api/articles/?sort_by=votes&topic=mitch")
+      .get("/api/articles/?sort_by=votes&order=up")
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe("bad order request");
+      });
+  });
+  it("should WORK", () => {
+    return request(app)
+      .get("/api/articles/?sort_by=comment_count&order=asc&topic=mitch")
       .expect(200)
       .then((response) => {
         const { body } = response;
         expect(body.articles.length).not.toBe(0);
+        expect(body.articles).toBeSorted({
+          key: "comment_count",
+          descending: false,
+        });
         body.articles.forEach((article) => {
           expect(article).toEqual(
             expect.objectContaining({
