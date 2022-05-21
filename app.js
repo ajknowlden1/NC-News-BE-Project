@@ -60,7 +60,7 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
   res.status(404).send({ status: 404, msg: "not found" });
 });
-const { PORT } = process.env;
+const { PORT = 9090 } = process.env;
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}...`));
 module.exports = app;
