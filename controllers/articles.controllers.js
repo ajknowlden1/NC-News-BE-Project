@@ -6,6 +6,7 @@ const {
   selectAllArticles,
   selectArticleComments,
   insertComment,
+  selectAndDeleteComment,
 } = require("../models/articles.models");
 
 const getArticle = (req, res, next) => {
@@ -60,10 +61,21 @@ const postNewComment = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
+
+const deleteComment = (req, res, next) => {
+  const id = req.params.comment_id;
+  console.log(id);
+  selectAndDeleteComment(id)
+    .then((err) => {
+      res.status(204).send();
+    })
+    .catch((err) => next(err));
+};
 module.exports = {
   getArticle,
   patchArticle,
   getAllArticles,
   getArticleComments,
   postNewComment,
+  deleteComment,
 };

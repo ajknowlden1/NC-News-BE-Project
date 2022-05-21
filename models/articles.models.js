@@ -94,10 +94,22 @@ const insertComment = (id, username, body) => {
     });
 };
 
+const selectAndDeleteComment = (id) => {
+  return db
+    .query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [id])
+    .then((result) => {
+      if (!result.rows.length) {
+        return Promise.reject({ status: 404, msg: "not found" });
+      }
+    })
+    .catch((err) => next(err));
+};
+
 module.exports = {
   selectArticleById,
   updateArticleVotes,
   selectAllArticles,
   selectArticleComments,
   insertComment,
+  selectAndDeleteComment,
 };

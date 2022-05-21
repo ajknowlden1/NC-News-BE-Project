@@ -448,7 +448,7 @@ describe("GET /api/articles queries", () => {
         expect(body.msg).toBe("bad order request");
       });
   });
-  it("should WORK", () => {
+  it("should correctly sort a complex query", () => {
     return request(app)
       .get("/api/articles/?sort_by=comment_count&order=asc&topic=mitch")
       .expect(200)
@@ -473,6 +473,25 @@ describe("GET /api/articles queries", () => {
           );
           expect(article.topic).toBe("mitch");
         });
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  it("should respond with status 204 and no content if deletion was succesful", () => {
+    return request(app)
+      .delete("/api/comments/4")
+      .expect(204)
+      .then((response) => {
+        expect(response.body).toEqual({});
+      });
+  });
+  it("should respond with status 404 - not found if the requested id has no data associated with it", () => {
+    return request(app)
+      .delete("/api/comments/8734")
+      .expect(404)
+      .then((response) => {
+        console.log(response);
       });
   });
 });
