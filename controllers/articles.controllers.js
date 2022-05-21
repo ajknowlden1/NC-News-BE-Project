@@ -31,7 +31,8 @@ const patchArticle = (req, res, next) => {
 };
 
 const getAllArticles = (req, res, next) => {
-  selectAllArticles()
+  const { query } = req;
+  selectAllArticles(query)
     .then((result, err) => {
       res.status(200).send({ articles: result });
     })

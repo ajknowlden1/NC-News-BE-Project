@@ -49,6 +49,11 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
+  if (err.status === 400) res.send(err);
+  else next(err);
+});
+
+app.use((err, req, res, next) => {
   res.status(404).send(err);
 });
 
