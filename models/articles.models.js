@@ -36,10 +36,12 @@ const updateArticleVotes = (id, increment) => {
 };
 
 const selectAllArticles = (query) => {
+  let queryStr = `SELECT articles.*, CAST((COUNT(comments.article_id))AS INT) AS comment_count from articles INNER JOIN comments ON comments.article_id = articles.article_id`;
   const validSorts = ["votes", "comment_count", "created_at"];
   let sort_by =
     typeof query.sort_by !== "undefined" ? query.sort_by : "created_at";
   let order = typeof query.order !== "undefined" ? query.order : "desc";
+  let topic = typeof query.topic !== "undefined" ? query.topic : false;
 
   if (![...validSorts].includes(sort_by)) {
     return Promise.reject({ status: 400, msg: "bad sort request" });
@@ -47,13 +49,17 @@ const selectAllArticles = (query) => {
   if (!["asc", "desc"].includes(order)) {
     return Promise.reject({ status: 400, msg: "bad order request" });
   }
-  let queryStr = `SELECT articles.*, CAST (((COUNT(comments.article_id)))AS INT) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY articles.article_id ORDER BY ${sort_by} ${order}`;
+  if (topic) {
+    queryStr += ` WHERE topic = '${topic}' GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order};`;
+  } else
+    queryStr += ` GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order};`;
+
   return db
     .query(queryStr)
     .then((result) => {
       return result.rows;
     })
-    .catch((err) => console.log(err));
+    .catch((err) => next(err));
 };
 
 const selectArticleComments = (id) => {
