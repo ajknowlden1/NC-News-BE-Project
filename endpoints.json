@@ -2,6 +2,34 @@
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
+  "GET /api/users": {
+    "description": "Returns an array of all the users.",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "butter_bridge",
+          "name": "jonny",
+          "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        },
+        {
+          "username": "icellusedkars",
+          "name": "sam",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+        },
+        {
+          "username": "rogersop",
+          "name": "paul",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+        },
+        {
+          "username": "lurker",
+          "name": "do_nothing",
+          "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+        }
+      ]
+    }
+  },
   "GET /api/topics": {
     "description": "serves an array of all topics",
     "queries": [],
@@ -11,7 +39,7 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": ["topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
@@ -23,5 +51,76 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "Returns the article with the provided id.",
+    "queries": [],
+    "exampleResponse": {
+      "article": [
+        {
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": 1594329060000,
+          "votes": 100
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "Returns all the comments associated with article with the given id.",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "I hate streaming eyes even more",
+          "votes": 0,
+          "author": "icellusedkars",
+          "article_id": 1,
+          "created_at": 1586642520000
+        },
+        {
+          "body": "Lobster pot",
+          "votes": 0,
+          "author": "icellusedkars",
+          "article_id": 1,
+          "created_at": 1589577540000
+        },
+        {
+          "body": "Delicious crackerbreads",
+          "votes": 0,
+          "author": "icellusedkars",
+          "article_id": 1,
+          "created_at": 1586899140000
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "allows the article with the id specified to have its votes altered. the request body must be sent in the format: {inc_vote: x} where x is the amount to increase/decrease by.",
+    "queries": [],
+    "exampleResponse": {
+      "updated_article": [
+        {
+          "title": "Sony Vaio; or, The Laptop",
+          "topic": "mitch",
+          "author": "icellusedkars",
+          "body": "Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.",
+          "created_at": 1602828180000,
+          "votes": 0
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Posts a comment to the article with the specified id. This must be send in the format { username: , body: }.",
+    "queries": [],
+    "exampleResponse": { "comment_posted": "your comment here" }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes the comment with the specified id.",
+    "queries": [],
+    "exampleResponse": {}
   }
 }
