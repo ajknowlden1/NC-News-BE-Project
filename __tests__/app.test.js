@@ -417,4 +417,49 @@ describe("GET /api/articles queries", () => {
         });
       });
   });
+  it("should return a 400 - bad sort request error if the sort query is invalid", () => {
+    return request(app)
+      .get("/api/articles/?sort_by=age")
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe("bad sort request");
+      });
+  });
+  it("should return a 400 - bad order request error if the order query is invalid", () => {
+    return request(app)
+      .get("/api/articles/?sort_by=votes&order=up")
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe("bad order request");
+      });
+  });
+  it("should WORK", () => {
+    return request(app)
+      .get("/api/articles/?sort_by=comment_count&order=asc&topic=mitch")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(body.articles.length).not.toBe(0);
+        expect(body.articles).toBeSorted({
+          key: "comment_count",
+          descending: false,
+        });
+        body.articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
 });

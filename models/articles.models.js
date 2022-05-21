@@ -50,7 +50,10 @@ const selectAllArticles = (query) => {
     return Promise.reject({ status: 400, msg: "bad order request" });
   }
   if (topic) {
-    queryStr += ` WHERE topic = '${topic}' GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order};`;
+    if (sort_by !== "comment_count") {
+      queryStr += ` WHERE topic = '${topic}' GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order};`;
+    } else
+      queryStr += ` WHERE topic = '${topic}' GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`;
   } else
     queryStr += ` GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order};`;
 
