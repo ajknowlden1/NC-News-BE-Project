@@ -491,7 +491,17 @@ describe("DELETE /api/comments/:comment_id", () => {
       .delete("/api/comments/8734")
       .expect(404)
       .then((response) => {
-        console.log(response);
+        const { body } = response;
+        expect(body.msg).toBe("not found");
+      });
+  });
+  it("should respond with status 400 - bad request if the id is of invalid type", () => {
+    return request(app)
+      .delete("/api/comments/five")
+      .then((response) => {
+        const { body } = response;
+        expect(body.status).toBe(400);
+        expect(body.msg).toBe("bad request - invalid id");
       });
   });
 });

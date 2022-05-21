@@ -100,7 +100,7 @@ const selectAndDeleteComment = (id) => {
     .then((result) => {
       if (!result.rows.length) {
         return Promise.reject({ status: 404, msg: "not found" });
-      }
+      } else return result.rows;
     })
     .catch((err) => next(err));
 };

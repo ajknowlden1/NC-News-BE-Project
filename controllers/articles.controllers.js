@@ -64,12 +64,14 @@ const postNewComment = (req, res, next) => {
 
 const deleteComment = (req, res, next) => {
   const id = req.params.comment_id;
-  console.log(id);
-  selectAndDeleteComment(id)
-    .then((err) => {
-      res.status(204).send();
-    })
-    .catch((err) => next(err));
+  if (!Number.parseInt(id)) {
+    res.status(400).send({ status: 400, msg: "bad request - invalid id" });
+  } else
+    selectAndDeleteComment(id)
+      .then(() => {
+        res.status(204).send();
+      })
+      .catch((err) => next(err));
 };
 module.exports = {
   getArticle,
