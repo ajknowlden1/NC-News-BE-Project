@@ -6,6 +6,7 @@ const {
   selectAllArticles,
   selectArticleComments,
   insertComment,
+  selectAndDeleteComment,
 } = require("../models/articles.models");
 
 const getArticle = (req, res, next) => {
@@ -60,10 +61,23 @@ const postNewComment = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
+
+const deleteComment = (req, res, next) => {
+  const id = req.params.comment_id;
+  if (!Number.parseInt(id)) {
+    res.status(400).send({ status: 400, msg: "bad request - invalid id" });
+  } else
+    selectAndDeleteComment(id)
+      .then(() => {
+        res.status(204).send();
+      })
+      .catch((err) => next(err));
+};
 module.exports = {
   getArticle,
   patchArticle,
   getAllArticles,
   getArticleComments,
   postNewComment,
+  deleteComment,
 };
