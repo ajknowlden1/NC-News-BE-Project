@@ -9,12 +9,10 @@ const {
   deleteComment,
 } = require("./controllers/articles.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
-const { getAllEndpoints, sayHello } = require("./controllers/api.controllers");
+const { getAllEndpoints } = require("./controllers/api.controllers");
 const { getUsers } = require("./controllers/users.controllers");
 
 app.use(express.json());
-
-app.get("/", sayHello);
 
 app.get("/api", getAllEndpoints);
 
