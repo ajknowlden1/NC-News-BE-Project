@@ -1,3 +1,4 @@
+const res = require("express/lib/response");
 const fs = require("fs/promises");
 
 const getAllEndpoints = (req, res, next) => {
@@ -7,4 +8,10 @@ const getAllEndpoints = (req, res, next) => {
     res.status(200).send({ endpoints: endpoints });
   });
 };
-module.exports = { getAllEndpoints };
+
+const sayHello = () => {
+  res.status(200).send({
+    msg: "welcome to the nc-news API! visit /api to see a list of endpoints",
+  });
+};
+module.exports = { getAllEndpoints, sayHello };
