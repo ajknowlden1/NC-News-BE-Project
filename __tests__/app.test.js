@@ -404,13 +404,14 @@ describe("GET /api/articles queries", () => {
         expect(body.msg).toBe("bad order request");
       });
   });
-  it("should WORK", () => {
+  it("should correctly sort a complex query", () => {
     return request(app)
-      .get("/api/articles/?sort_by=comment_count&order=asc&topic=mitch")
+      .get("/api/articles/?sort_by=comment_count&&topic=mitch&order=asc")
       .expect(200)
       .then((response) => {
         const { body } = response;
-        expect(body.articles.length).not.toBe(0);
+        console.log(body);
+        expect(body.articles).not.toBe(0);
         expect(body.articles).toBeSorted({
           key: "comment_count",
           descending: false,
