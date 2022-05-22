@@ -410,7 +410,6 @@ describe("GET /api/articles queries", () => {
       .expect(200)
       .then((response) => {
         const { body } = response;
-        console.log(body);
         expect(body.articles).not.toBe(0);
         expect(body.articles).toBeSorted({
           key: "comment_count",
@@ -450,30 +449,16 @@ describe("GET /api/articles queries", () => {
         expect(body.msg).toBe("bad order request");
       });
   });
-  it("should correctly sort a complex query", () => {
+  it("should correctly sort a single sort query", () => {
     return request(app)
-      .get("/api/articles/?sort_by=comment_count&order=asc&topic=mitch")
+      .get("/api/articles/?sort_by=comment_count")
       .expect(200)
       .then((response) => {
         const { body } = response;
         expect(body.articles.length).not.toBe(0);
         expect(body.articles).toBeSorted({
           key: "comment_count",
-          descending: false,
-        });
-        body.articles.forEach((article) => {
-          expect(article).toEqual(
-            expect.objectContaining({
-              author: expect.any(String),
-              title: expect.any(String),
-              article_id: expect.any(Number),
-              topic: expect.any(String),
-              created_at: expect.any(String),
-              votes: expect.any(Number),
-              comment_count: expect.any(Number),
-            })
-          );
-          expect(article.topic).toBe("mitch");
+          descending: true,
         });
       });
   });

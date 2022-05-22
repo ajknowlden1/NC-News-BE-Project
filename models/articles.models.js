@@ -36,34 +36,32 @@ const updateArticleVotes = (id, increment) => {
 };
 
 const selectAllArticles = (query) => {
-  let queryStr = `SELECT articles.*, CAST((COUNT(comments.article_id))AS INT) AS comment_count from articles LEFT JOIN comments ON comments.article_id = articles.article_id`;
+  let queryStr = `SELECT articles.*, CAST((COUNT(comments.article_id))AS INT) AS comment_count from articles LEFT JOIN comments ON articles.article_id = comments.article_id`;
   const validSorts = ["votes", "comment_count", "created_at"];
+
   let sort_by =
     typeof query.sort_by !== "undefined" ? query.sort_by : "created_at";
   let order = typeof query.order !== "undefined" ? query.order : "desc";
-  let topic = typeof query.topic !== "undefined" ? query.topic : false;
-  if (![...validSorts].includes(sort_by)) {
+  let topic = typeof query.topic !== "undefined" ? query.topic : null;
+
+  if (!validSorts.includes(sort_by)) {
     return Promise.reject({ status: 400, msg: "bad sort request" });
   }
   if (!["asc", "desc"].includes(order)) {
     return Promise.reject({ status: 400, msg: "bad order request" });
   }
-  if (topic !== false) {
-    if (sort_by === "comment_count") {
-      queryStr += ` WHERE topic = '${topic}' GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`;
-    } else
-      queryStr += ` WHERE topic = '${topic}' GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order};`;
-  } else if (sort_by !== "comment_count") {
-    queryStr += ` GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order};`;
+  if (topic !== null) {
+    queryStr += ` WHERE topic = '${topic}' GROUP BY articles.article_id ORDER BY ${sort_by} ${order}`;
   } else
-    queryStr += ` WHERE topic = '${topic}' GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`;
+    queryStr += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order}`;
 
   return db
     .query(queryStr)
     .then((result) => {
+      console.log(result.rows);
       return result.rows;
     })
-    .catch((err) => next(err));
+    .catch((err) => console.log(err));
 };
 
 const selectArticleComments = (id) => {
