@@ -1,3 +1,4 @@
+const res = require("express/lib/response");
 const fs = require("fs/promises");
 
 const getAllEndpoints = (req, res, next) => {
@@ -7,4 +8,5 @@ const getAllEndpoints = (req, res, next) => {
     res.status(200).send({ endpoints: endpoints });
   });
 };
+
 module.exports = { getAllEndpoints };
