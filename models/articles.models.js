@@ -58,7 +58,6 @@ const selectAllArticles = (query) => {
   return db
     .query(queryStr)
     .then((result) => {
-      console.log(result.rows);
       return result.rows;
     })
     .catch((err) => console.log(err));
