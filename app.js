@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const {
   getArticle,
   patchArticle,
@@ -11,6 +12,8 @@ const {
 const { getTopics } = require("./controllers/topics.controllers");
 const { getAllEndpoints } = require("./controllers/api.controllers");
 const { getUsers } = require("./controllers/users.controllers");
+
+app.use(cors({ origin: "http://localhost:3000" }));
 
 app.use(express.json());
 
@@ -60,7 +63,5 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
   res.status(404).send({ status: 404, msg: "not found" });
 });
-const { PORT = 9090 } = process.env;
 
-app.listen(PORT, () => console.log(`Listening on ${PORT}...`));
 module.exports = app;
