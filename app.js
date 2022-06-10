@@ -13,7 +13,7 @@ const { getTopics } = require("./controllers/topics.controllers");
 const { getAllEndpoints } = require("./controllers/api.controllers");
 const { getUsers } = require("./controllers/users.controllers");
 
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors());
 
 app.use(express.json());
 
