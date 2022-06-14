@@ -32,6 +32,7 @@
   "GET /api/articles": {
     "description": "serves an array of all the articles",
     "queries": ["topic", "sort_by", "order"],
+    "valid sort_by": ["created_at", "comment_count", "votes"],
     "exampleResponse": {
       "articles": [
         {
