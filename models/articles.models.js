@@ -72,7 +72,7 @@ const selectArticleComments = (id) => {
       else
         return db
           .query(
-            `SELECT comment_id, body, author, votes, created_at FROM comments WHERE EXISTS (SELECT * FROM comments WHERE comments.article_id = $1)`,
+            `SELECT comment_id, body, author, votes, created_at FROM comments WHERE EXISTS (SELECT comment_id FROM comments WHERE comments.article_id = $1)`,
             [id]
           )
           .then((result) => {
