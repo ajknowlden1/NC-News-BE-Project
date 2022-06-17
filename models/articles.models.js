@@ -46,11 +46,11 @@ const insertArticle = (author, title, body, topic) => {
     });
 };
 
-const deleteArticle = (id) => {
+const selectAndDeleteArticle = (id) => {
   return db
-    .query(`DELETE FROM articles WHERE article_id = $1 RETURNING *`, [id])
-    .then((result) => {
-      return result.rows[0];
+    .query(`DELETE FROM articles WHERE article_id = $1`, [id])
+    .then(() => {
+      return;
     });
 };
 
@@ -130,5 +130,5 @@ module.exports = {
   insertComment,
   selectAndDeleteComment,
   insertArticle,
-  deleteArticle,
+  selectAndDeleteArticle,
 };

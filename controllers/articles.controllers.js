@@ -6,6 +6,7 @@ const {
   insertComment,
   selectAndDeleteComment,
   insertArticle,
+  selectAndDeleteArticle,
 } = require("../models/articles.models");
 
 const getArticle = (req, res, next) => {
@@ -42,9 +43,12 @@ const patchArticle = (req, res, next) => {
 
 const deleteArticle = (req, res, next) => {
   const id = req.params.article_id;
-  deleteArticle(id).then((res, err) => {
-    res.status(204);
-  });
+
+  selectAndDeleteArticle(id)
+    .then((result, err) => {
+      res.status(204);
+    })
+    .catch((err) => next(err));
 };
 
 const getAllArticles = (req, res, next) => {
@@ -84,8 +88,8 @@ const deleteComment = (req, res, next) => {
     res.status(400).send({ status: 400, msg: "bad request - invalid id" });
   } else
     selectAndDeleteComment(id)
-      .then(() => {
-        res.status(204).send();
+      .then((response) => {
+        res.status(204).send({ msg: "no content" });
       })
       .catch((err) => next(err));
 };

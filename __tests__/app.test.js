@@ -470,7 +470,7 @@ describe("delete /api/comments/:comment_id", () => {
       .delete("/api/comments/4")
       .expect(204)
       .then((response) => {
-        expect(response.body).toEqual({});
+        expect(response.status).toBe(204);
       });
   });
   it("should respond with status 404 - not found if the requested id has no data associated with it", () => {
@@ -550,9 +550,9 @@ describe("POST /api/articles", () => {
 describe("delete /api/articles/:article_id", () => {
   it("should return 200 and no content if deletion is succesful", () => {
     return request(app)
-      .delete("/api/articles/1")
-      .then((response) => {
-        expect(200);
+      .delete("/api/articles/5")
+      .then(() => {
+        expect(204);
       });
   });
 });
