@@ -8,10 +8,11 @@ const {
   getArticleComments,
   postNewComment,
   deleteComment,
+  addArticle,
 } = require("./controllers/articles.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
 const { getAllEndpoints } = require("./controllers/api.controllers");
-const { getUsers } = require("./controllers/users.controllers");
+const { getUsers, addUser } = require("./controllers/users.controllers");
 
 app.use(cors());
 
@@ -23,11 +24,15 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles", getAllArticles);
 
+app.post("/api/articles", addArticle);
+
 app.get("/api/articles/:article_id", getArticle);
 
 app.get("/api/articles/:article_id/comments", getArticleComments);
 
 app.get("/api/users", getUsers);
+
+app.post("/api/users", addUser);
 
 app.patch("/api/articles/:article_id", patchArticle);
 

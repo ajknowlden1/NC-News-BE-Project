@@ -5,6 +5,7 @@ const {
   selectArticleComments,
   insertComment,
   selectAndDeleteComment,
+  insertArticle,
 } = require("../models/articles.models");
 
 const getArticle = (req, res, next) => {
@@ -14,6 +15,16 @@ const getArticle = (req, res, next) => {
       const resArt = result.find((article) => article.article_id == id);
       if (!resArt) res.status(404).send({ status: 404, msg: "not found" });
       else res.status(200).send({ article: resArt });
+    })
+    .catch((err) => next(err));
+};
+
+const addArticle = (req, res, next) => {
+  const { author, title, body, topic } = req.body;
+
+  insertArticle(author, title, body, topic)
+    .then((result, err) => {
+      res.status(201).send({ article: result });
     })
     .catch((err) => next(err));
 };
@@ -78,4 +89,5 @@ module.exports = {
   getArticleComments,
   postNewComment,
   deleteComment,
+  addArticle,
 };
