@@ -40,6 +40,13 @@ const patchArticle = (req, res, next) => {
     .catch((err) => next(err));
 };
 
+const deleteArticle = (req, res, next) => {
+  const id = req.params.article_id;
+  deleteArticle(id).then((res, err) => {
+    res.status(204);
+  });
+};
+
 const getAllArticles = (req, res, next) => {
   const { query } = req;
   selectAllArticles(query)
@@ -90,4 +97,5 @@ module.exports = {
   postNewComment,
   deleteComment,
   addArticle,
+  deleteArticle,
 };

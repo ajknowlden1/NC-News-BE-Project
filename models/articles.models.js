@@ -46,6 +46,14 @@ const insertArticle = (author, title, body, topic) => {
     });
 };
 
+const deleteArticle = (id) => {
+  return db
+    .query(`DELETE FROM articles WHERE article_id = $1 RETURNING *`, [id])
+    .then((result) => {
+      return result.rows[0];
+    });
+};
+
 const selectAllArticles = (query) => {
   let queryStr = `SELECT articles.*, CAST((COUNT(comments.article_id))AS INT) AS comment_count from articles LEFT JOIN comments ON articles.article_id = comments.article_id`;
   const validSorts = ["votes", "comment_count", "created_at"];
@@ -122,4 +130,5 @@ module.exports = {
   insertComment,
   selectAndDeleteComment,
   insertArticle,
+  deleteArticle,
 };

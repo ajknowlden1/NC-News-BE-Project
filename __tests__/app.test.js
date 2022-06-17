@@ -546,3 +546,13 @@ describe("POST /api/articles", () => {
       });
   });
 });
+
+describe("DELETE /api/articles/:article_id", () => {
+  it("should return 200 and no content if deletion is succesful", () => {
+    return request(app)
+      .delete("/api/article/1")
+      .then((response) => {
+        expect(200);
+      });
+  });
+});

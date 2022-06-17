@@ -9,6 +9,7 @@ const {
   postNewComment,
   deleteComment,
   addArticle,
+  deleteArticle,
 } = require("./controllers/articles.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
 const { getAllEndpoints } = require("./controllers/api.controllers");
@@ -29,6 +30,8 @@ app.post("/api/articles", addArticle);
 app.get("/api/articles/:article_id", getArticle);
 
 app.get("/api/articles/:article_id/comments", getArticleComments);
+
+app.delete("/api/articles/:article_id", deleteArticle);
 
 app.get("/api/users", getUsers);
 
