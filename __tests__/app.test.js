@@ -505,3 +505,44 @@ describe("GET /api", () => {
       });
   });
 });
+
+describe("POST /api/users", () => {
+  it("should return with 201 - created and the user added if the request is valid", () => {
+    return request(app)
+      .post("/api/users")
+      .send({ username: "ajknowlden1", name: "aaron" })
+      .then((response) => {
+        const { body } = response;
+        expect(body.user.username).toEqual("ajknowlden1");
+        expect(body.user.name).toEqual("aaron");
+      });
+  });
+});
+
+describe("POST /api/articles", () => {
+  it("should return with 201 - created and the posted article if the request is valid", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "lurker",
+        title: "testing",
+        body: "this is a test",
+        topic: "cats",
+      })
+      .expect(201)
+      .then((res) => {
+        const { body } = res;
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
+      });
+  });
+});

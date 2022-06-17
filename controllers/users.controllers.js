@@ -1,5 +1,5 @@
 const res = require("express/lib/response");
-const { selectUsers } = require("../models/users.models");
+const { selectUsers, insertUser } = require("../models/users.models");
 
 const getUsers = (req, res, next) => {
   selectUsers()
@@ -9,4 +9,14 @@ const getUsers = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-module.exports = { getUsers };
+const addUser = (req, res, next) => {
+  const { username, name } = req.body;
+
+  insertUser(username, name)
+    .then((response) => {
+      res.status(201).send({ user: response });
+    })
+    .catch((err) => next(err));
+};
+
+module.exports = { getUsers, addUser };

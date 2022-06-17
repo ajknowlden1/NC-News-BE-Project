@@ -35,6 +35,17 @@ const updateArticleVotes = (id, increment) => {
     });
 };
 
+const insertArticle = (author, title, body, topic) => {
+  return db
+    .query(
+      `INSERT INTO articles (author, title, body, topic) VALUES ($1, $2, $3, $4) RETURNING *`,
+      [author, title, body, topic]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
+};
+
 const selectAllArticles = (query) => {
   let queryStr = `SELECT articles.*, CAST((COUNT(comments.article_id))AS INT) AS comment_count from articles LEFT JOIN comments ON articles.article_id = comments.article_id`;
   const validSorts = ["votes", "comment_count", "created_at"];
@@ -72,7 +83,7 @@ const selectArticleComments = (id) => {
       else
         return db
           .query(
-            `SELECT comment_id, body, author, votes, created_at FROM comments WHERE comments.article_id = $1`,
+            `SELECT comment_id, body, author, votes, created_at FROM comments WHERE comments.article_id = $1 ORDER BY created_at DESC`,
             [id]
           )
           .then((result) => {
@@ -110,4 +121,5 @@ module.exports = {
   selectArticleComments,
   insertComment,
   selectAndDeleteComment,
+  insertArticle,
 };
