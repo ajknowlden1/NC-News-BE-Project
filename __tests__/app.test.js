@@ -464,7 +464,7 @@ describe("GET /api/articles queries", () => {
   });
 });
 
-describe("DELETE /api/comments/:comment_id", () => {
+describe("delete /api/comments/:comment_id", () => {
   it("should respond with status 204 and no content if deletion was succesful", () => {
     return request(app)
       .delete("/api/comments/4")
@@ -547,10 +547,10 @@ describe("POST /api/articles", () => {
   });
 });
 
-describe("DELETE /api/articles/:article_id", () => {
+describe("delete /api/articles/:article_id", () => {
   it("should return 200 and no content if deletion is succesful", () => {
     return request(app)
-      .delete("/api/article/1")
+      .delete("/api/articles/1")
       .then((response) => {
         expect(200);
       });
