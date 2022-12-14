@@ -13,7 +13,8 @@ const {
 } = require("./controllers/articles.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
 const { getAllEndpoints } = require("./controllers/api.controllers");
-const { getUsers, addUser } = require("./controllers/users.controllers");
+const { getUsers } = require("./controllers/users.controllers");
+const { addUser } = require("./controllers/users.controllers");
 
 app.use(cors());
 
