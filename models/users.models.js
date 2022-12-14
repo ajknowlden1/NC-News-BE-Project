@@ -1,4 +1,3 @@
-const { getUsers } = require("../controllers/users.controllers");
 const db = require("../db/connection");
 
 const selectUsers = () => {
