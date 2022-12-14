@@ -1,6 +1,6 @@
 # Northcoders News API
 
-Hosted version can be found at "https://aknowlden-nc-news.herokuapp.com/api"
+Hosted version can be found at "https://nc-news-0jrl.onrender.com/api"
 
 ## About this Project
 
